@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "yogeshojha.patro",
+  "name": "Patro",
+  "version": "0.1.0",
+  "author": "Yogesh Ojha",
+  "license": "MIT",
+  "description": "Nepali calendar for the Omarchy bar. Bikram Sambat date, month view, tithi, and a date converter.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Patro",
+    "description": "Today's Bikram Sambat date in the bar, with a Nepali month view, the tithi, and conversion both ways between BS and AD.",
+    "category": "Time",
+    "aliases": [
+      "nepali",
+      "patro",
+      "bikram",
+      "sambat",
+      "calendar",
+      "nepal"
+    ],
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "language": "Nepali",
+      "numerals": "Devanagari",
+      "format": "Full",
+      "showWeekday": true,
+      "weekStart": "Sunday",
+      "showGregorian": true,
+      "showTithi": true,
+      "fontFamily": ""
+    },
+    "schema": [
+      {
+        "key": "language",
+        "type": "enum",
+        "label": "Language",
+        "options": [
+          "Nepali",
+          "English"
+        ],
+        "defaultValue": "Nepali",
+        "description": "Nepali writes month, weekday and tithi names in Devanagari. English romanises them."
+      },
+      {
+        "key": "numerals",
+        "type": "enum",
+        "label": "Numerals",
+        "options": [
+          "Devanagari",
+          "Latin"
+        ],
+        "defaultValue": "Devanagari",
+        "description": "Whether Bikram Sambat dates read २०८३ or 2083. Gregorian dates always use Latin digits."
+      },
+      {
+        "key": "format",
+        "type": "enum",
+        "label": "Bar format",
+        "options": [
+          "Full",
+          "Compact",
+          "Numeric",
+          "With Gregorian"
+        ],
+        "defaultValue": "Full",
+        "description": "Right-clicking the bar label walks these in order."
+      },
+      {
+        "key": "showWeekday",
+        "type": "boolean",
+        "label": "Show weekday",
+        "defaultValue": true,
+        "description": "Put the weekday in front of the date in the bar."
+      },
+      {
+        "key": "weekStart",
+        "type": "enum",
+        "label": "Week starts on",
+        "options": [
+          "Sunday",
+          "Monday"
+        ],
+        "defaultValue": "Sunday",
+        "description": "Nepali calendars start the week on Sunday and treat Saturday as the holiday."
+      },
+      {
+        "key": "showGregorian",
+        "type": "boolean",
+        "label": "Show Gregorian dates",
+        "defaultValue": true,
+        "description": "Print the Gregorian day under each day of the month view."
+      },
+      {
+        "key": "showTithi",
+        "type": "boolean",
+        "label": "Show tithi",
+        "defaultValue": true,
+        "description": "Show the lunar day, and mark Ekadashi, Purnima and Aunsi in the month view."
+      },
+      {
+        "key": "fontFamily",
+        "type": "string",
+        "label": "Font family",
+        "defaultValue": "",
+        "description": "Leave empty to inherit the bar font. Devanagari needs a font that covers it, such as Noto Sans Devanagari."
+      }
+    ]
+  }
+}
