@@ -9,21 +9,31 @@ var HOLIDAY = "holiday"
 var OBSERVANCE = "observance"
 var MOON = "moon"
 
-// from: the Bikram year the day commemorates, for the ones that mark an event.
+// from: the Bikram year of the event, for the days that commemorate one.
 var FIXED_BIKRAM = [
   { month: 1, day: 1, kind: HOLIDAY, nepali: "नयाँ वर्ष", english: "Nepali New Year" },
   { month: 1, day: 11, from: 2063, kind: HOLIDAY, nepali: "लोकतन्त्र दिवस", english: "Loktantra Diwas" },
   { month: 2, day: 15, from: 2065, kind: HOLIDAY, nepali: "गणतन्त्र दिवस", english: "Republic Day" },
+  { month: 3, day: 29, kind: OBSERVANCE, nepali: "भानु जयन्ती", english: "Bhanu Jayanti" },
+  { month: 4, day: 1, kind: OBSERVANCE, nepali: "साउने सङ्क्रान्ति", english: "Shrawan Sankranti" },
   { month: 4, day: 15, kind: OBSERVANCE, nepali: "खिर खाने दिन", english: "Khir Khane Din" },
   { month: 5, day: 22, kind: OBSERVANCE, nepali: "निजामती सेवा दिवस", english: "Civil Service Day" },
   { month: 6, day: 1, kind: OBSERVANCE, nepali: "विश्वकर्मा पूजा", english: "Vishwakarma Puja" },
+  { month: 6, day: 3, from: 2072, kind: HOLIDAY, nepali: "संविधान दिवस", english: "Constitution Day" },
   { month: 9, day: 27, kind: HOLIDAY, nepali: "पृथ्वी जयन्ती", english: "Prithvi Jayanti" },
-  { month: 10, day: 1, kind: HOLIDAY, nepali: "माघे संक्रान्ति", english: "Maghe Sankranti" },
+  { month: 10, day: 1, kind: HOLIDAY, nepali: "माघे सङ्क्रान्ति", english: "Maghe Sankranti" },
+  { month: 10, day: 16, kind: HOLIDAY, nepali: "सहिद दिवस", english: "Martyrs' Day" },
   { month: 11, day: 7, from: 2007, kind: HOLIDAY, nepali: "प्रजातन्त्र दिवस", english: "Prajatantra Diwas" }
 ]
 
 var FIXED_GREGORIAN = [
-  { month: 5, day: 1, kind: HOLIDAY, nepali: "अन्तर्राष्ट्रिय श्रमिक दिवस", english: "Labour Day" }
+  { month: 1, day: 1, kind: OBSERVANCE, nepali: "अङ्ग्रेजी नयाँ वर्ष", english: "New Year's Day" },
+  { month: 3, day: 8, kind: HOLIDAY, nepali: "अन्तर्राष्ट्रिय नारी दिवस", english: "International Women's Day" },
+  { month: 5, day: 1, kind: HOLIDAY, nepali: "अन्तर्राष्ट्रिय श्रमिक दिवस", english: "Labour Day" },
+  { month: 5, day: 8, kind: OBSERVANCE, nepali: "विश्व रेडक्रस दिवस", english: "World Red Cross Day" },
+  { month: 12, day: 1, kind: OBSERVANCE, nepali: "विश्व एड्स दिवस", english: "World AIDS Day" },
+  { month: 12, day: 10, kind: OBSERVANCE, nepali: "मानव अधिकार दिवस", english: "Human Rights Day" },
+  { month: 12, day: 25, kind: HOLIDAY, nepali: "क्रिसमस", english: "Christmas" }
 ]
 
 var MOON_MARKERS = [

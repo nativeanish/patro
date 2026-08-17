@@ -202,3 +202,67 @@ test("days older than the calendar itself carry no from year", () => {
   const newYear = Observances.forDate({ year: firstYear, month: 1, day: 1 }, null, 0);
   assert.equal(newYear[0].english, "Nepali New Year");
 });
+
+test("no two fixed entries claim the same day", () => {
+  for (const list of [Observances.FIXED_BIKRAM, Observances.FIXED_GREGORIAN]) {
+    const seen = new Set();
+    for (const entry of list) {
+      const key = `${entry.month}-${entry.day}`;
+      assert.ok(!seen.has(key), `two entries on ${key}`);
+      seen.add(key);
+    }
+  }
+});
+
+test("the fixed lists are ordered by date", () => {
+  for (const list of [Observances.FIXED_BIKRAM, Observances.FIXED_GREGORIAN]) {
+    for (let i = 1; i < list.length; i += 1) {
+      const before = list[i - 1].month * 100 + list[i - 1].day;
+      assert.ok(list[i].month * 100 + list[i].day > before,
+        `${list[i].english} is out of order`);
+    }
+  }
+});
+
+// The government list quotes these in Bikram Sambat, so they double as a check that
+// the calendar table lands the Gregorian anchors on the right Bikram day.
+test("Gregorian-anchored holidays fall where the official list says", () => {
+  const expected = [
+    ["Labour Day", 2083, 1, 18],
+    ["Christmas", 2083, 9, 10],
+    ["International Women's Day", 2083, 11, 24],
+  ];
+  for (const [name, year, month, day] of expected) {
+    const entries = Observances.forDate(
+      { year, month, day }, plain(Bikram.toGregorian(year, month, day)), 0);
+    assert.ok(entries.some((entry) => entry.english === name),
+      `${name} is not on BS ${year}-${month}-${day}`);
+  }
+});
+
+test("Constitution Day starts with the constitution", () => {
+  // Promulgated 20 September 2015, which is 3 Ashwin 2072.
+  assert.deepEqual(plain(Bikram.fromGregorian(2015, 9, 20)), { year: 2072, month: 6, day: 3 });
+  const before = Observances.forDate({ year: 2071, month: 6, day: 3 }, null, 0);
+  const after = Observances.forDate({ year: 2072, month: 6, day: 3 }, null, 0);
+  assert.ok(!before.some((entry) => entry.english === "Constitution Day"));
+  assert.ok(after.some((entry) => entry.english === "Constitution Day"));
+});
+
+test("a year carries the expected spread of fixed days", () => {
+  let holidays = 0;
+  let observances = 0;
+  for (let month = 1; month <= 12; month += 1) {
+    for (let day = 1; day <= Bikram.monthLength(2083, month); day += 1) {
+      for (const entry of Observances.forDate(
+        { year: 2083, month, day }, plain(Bikram.toGregorian(2083, month, day)), 0)) {
+        if (entry.kind === Observances.HOLIDAY) holidays += 1;
+        else observances += 1;
+      }
+    }
+  }
+  assert.equal(holidays, Observances.FIXED_BIKRAM.filter((e) => e.kind === Observances.HOLIDAY).length
+    + Observances.FIXED_GREGORIAN.filter((e) => e.kind === Observances.HOLIDAY).length);
+  assert.equal(observances, Observances.FIXED_BIKRAM.filter((e) => e.kind === Observances.OBSERVANCE).length
+    + Observances.FIXED_GREGORIAN.filter((e) => e.kind === Observances.OBSERVANCE).length);
+});
