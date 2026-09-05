@@ -1,7 +1,7 @@
 # Patro
 
 Nepali calendar for the [Omarchy](https://omarchy.org/) bar. Bikram Sambat date,
-month view in Devanagari, tithi, holidays, and a BS ↔ AD converter.
+month view in Devanagari, tithi, holidays, dual BS / AD view, and year progress.
 
 ![The Patro panel](preview.png)
 
@@ -13,9 +13,15 @@ omarchy plugin add https://github.com/nativeanish/patro.git --enable
 
 Devanagari comes from `noto-fonts`, already installed by Omarchy.
 
-Optional keybind, in `~/.config/hypr/bindings.conf`:
+Optional keybind, in `~/.config/hypr/bindings.lua`:
 
+```lua
+o.bind("SUPER + SHIFT + C", "Patro", "omarchy-shell io.github.nativeanish.patro toggle")
 ```
+
+Or for legacy `~/.config/hypr/bindings.conf`:
+
+```ini
 bindd = SUPER SHIFT, C, Patro, exec, omarchy-shell io.github.nativeanish.patro toggle
 ```
 
@@ -88,7 +94,7 @@ algorithm.
 ## Development
 
 ```bash
-node --test tests/*.test.js          # 77 tests, no dependencies
+node --test tests/*.test.js          # 82 tests, no dependencies
 node tools/build-table.js --check    # table matches its sources
 node tools/build-table.js            # regenerate after editing sources.json
 qmllint -I <import-root> *.qml
@@ -97,8 +103,8 @@ omarchy plugin validate .
 
 `Bikram.js` calendar arithmetic, `Astro.js` sun and moon, `Nepali.js` names and
 formatting, `Observances.js` marked days, `CalendarData.js` the generated table.
-`BarWidget.qml` bar item, `Panel.qml` month view, `DayCell.qml` one day,
-`YearProgress.qml` year progress bar.
+`BarWidget.qml` bar item, `NepalFlag.qml` waving flag, `Panel.qml` month view,
+`DayCell.qml` one day, `YearProgress.qml` year progress bar.
 
 `tests/harness.js` runs the QML JavaScript modules under node.
 
