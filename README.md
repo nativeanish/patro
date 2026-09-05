@@ -37,7 +37,7 @@ middle click copies today's date.
 
 ## Features
 
-- **Titlebar time & date**: shows time, Nepali weekday, BS date, and Gregorian date (e.g. `15:02 | शनिबार | २० भदौ | 5 September`).
+- **Titlebar waving flag, time & date**: shows a little animated waving Nepal flag, time, Nepali weekday, BS date, and Gregorian date (e.g. `🇳🇵 | 15:02 | शनिबार | २० भदौ | 5 September`).
 - **BS / AD Switcher**: toggle between Bikram Sambat and Gregorian calendars with dual date display.
 - **Year Progress**: visual progress bar with remaining days in both BS and AD years.
 
@@ -54,6 +54,7 @@ middle click copies today's date.
 | Week starts on | Sunday, Monday | Sunday |
 | Show Gregorian dates | | on |
 | Show tithi | | on |
+| Show waving flag | | on |
 | Font family | empty inherits the bar font | empty |
 
 Saturdays and public holidays are drawn in red. Ekadashi, Purnima and Aunsi are

@@ -34,6 +34,7 @@
       "weekStart": "Sunday",
       "showGregorian": true,
       "showTithi": true,
+      "showFlag": true,
       "fontFamily": ""
     },
     "schema": [
@@ -104,6 +105,13 @@
         "label": "Show tithi",
         "defaultValue": true,
         "description": "Show the lunar day, and mark Ekadashi, Purnima and Aunsi in the month view."
+      },
+      {
+        "key": "showFlag",
+        "type": "boolean",
+        "label": "Show waving flag",
+        "defaultValue": true,
+        "description": "Show a little waving Nepal flag before the time in the bar."
       },
       {
         "key": "fontFamily",

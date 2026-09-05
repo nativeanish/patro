@@ -20,6 +20,7 @@ BarWidget {
   readonly property string barFormat: Nepali.normalizeFormat(setting("format", "Time and Date"))
   readonly property bool showWeekday: setting("showWeekday", true) === true
   readonly property bool showTithi: setting("showTithi", true) === true
+  readonly property bool showFlag: setting("showFlag", true) === true
   readonly property string configuredFont: String(setting("fontFamily", ""))
 
   readonly property var todayBikram: Bikram.today(displayDate)
@@ -55,7 +56,8 @@ BarWidget {
   readonly property bool opened: panelLoader.item ? panelLoader.item.opened === true : false
   readonly property bool popoutSwitchClosing: panelLoader.item
     ? panelLoader.item.popoutSwitchClosing === true : false
-  readonly property real openPanelIndicatorWidth: button.labelWidth
+  readonly property real openPanelIndicatorWidth: root.vertical
+    ? 0 : Math.round(horizontalContent.implicitWidth)
   readonly property real openPanelIndicatorHeight: Math.max(
     Style.space(10), Math.round(Style.bar.iconSlot * 0.55))
 
@@ -162,9 +164,10 @@ BarWidget {
     anchors.fill: parent
     bar: root.bar
     text: root.vertical ? "" : root.displayText
-    labelVisible: !root.vertical
-    hasVisualContent: root.vertical ? root.verticalLines.length > 0 : text !== ""
-    fixedHeight: root.vertical ? root.verticalLines.length * Style.bar.iconSlot : -1
+    labelVisible: false
+    hasVisualContent: root.vertical ? (root.verticalLines.length > 0 || root.showFlag) : (text !== "" || root.showFlag)
+    fixedWidth: root.vertical ? -1 : Math.round(horizontalContent.implicitWidth + button.scaledHorizontalMargin * 2)
+    fixedHeight: root.vertical ? (root.verticalLines.length + (root.showFlag ? 1 : 0)) * Style.bar.iconSlot : -1
     horizontalMargin: 8.75
     verticalPadding: 8.75
     fontFamily: root.configuredFont !== ""
@@ -177,9 +180,59 @@ BarWidget {
       else root.togglePanel()
     }
 
+    Row {
+      id: horizontalContent
+      visible: !root.vertical
+      anchors.centerIn: parent
+      spacing: Style.space(6)
+
+      NepalFlag {
+        id: flag
+        visible: root.showFlag
+        anchors.verticalCenter: parent.verticalCenter
+      }
+
+      Text {
+        id: flagPipe
+        visible: root.showFlag && root.barFormat === "Time and Date"
+        text: "|"
+        color: button.foreground
+        opacity: 0.5
+        font.family: button.fontFamily
+        font.pixelSize: button.fontSize
+        renderType: Text.NativeRendering
+        anchors.verticalCenter: parent.verticalCenter
+      }
+
+      Text {
+        id: textLabel
+        text: root.displayText
+        color: button.active && button.useActiveColor ? button.activeColor : button.foreground
+        font.family: button.fontFamily
+        font.pixelSize: button.fontSize
+        renderType: Text.NativeRendering
+        anchors.verticalCenter: parent.verticalCenter
+
+        Behavior on color {
+          enabled: !root.bar || root.bar.foregroundAnimationEnabled
+          ColorAnimation { duration: 160 }
+        }
+      }
+    }
+
     Column {
       visible: root.vertical
       anchors.fill: parent
+
+      Item {
+        visible: root.showFlag
+        width: button.width
+        height: Style.bar.iconSlot
+
+        NepalFlag {
+          anchors.centerIn: parent
+        }
+      }
 
       Repeater {
         model: root.verticalLines
