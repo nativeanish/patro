@@ -247,3 +247,37 @@ test("a read date round-trips back to what was typed", () => {
     }
   }
 });
+
+test("yearProgress computes BS passed, remaining, and total days", () => {
+  const p = Bikram.yearProgress(2083, 5, 20);
+  assert.equal(p.total, 365);
+  assert.equal(p.passed, 31 + 31 + 32 + 31 + 20); // 145
+  assert.equal(p.remaining, 365 - 145); // 220
+  assert.equal(p.percent, 40);
+});
+
+test("gregorianYearProgress computes AD passed, remaining, and total days", () => {
+  const p = Bikram.gregorianYearProgress(2026, 9, 5);
+  assert.equal(p.total, 365);
+  // Jan(31)+Feb(28)+Mar(31)+Apr(30)+May(31)+Jun(30)+Jul(31)+Aug(31)+Sep(5) = 248
+  assert.equal(p.passed, 248);
+  assert.equal(p.remaining, 117);
+  assert.equal(p.percent, 68);
+});
+
+test("gregorianMonthGrid generates valid weeks and cells for Gregorian months", () => {
+  const grid = Bikram.gregorianMonthGrid(2026, 9, 0); // September 2026, starts Sunday
+  const cells = grid.flat();
+  assert.equal(cells.length % 7, 0);
+  const activeDays = cells.filter(Boolean);
+  assert.equal(activeDays.length, 30);
+  assert.equal(activeDays[0].day, 1);
+  assert.equal(activeDays[29].day, 30);
+
+  // 5 September 2026 is Saturday (weekday 6) and 20 Bhadra 2083
+  const sep5 = activeDays.find((c) => c.day === 5);
+  assert.ok(sep5);
+  assert.equal(sep5.weekday, 6);
+  assert.deepEqual(plain(sep5.bikram), { year: 2083, month: 5, day: 20 });
+});
+

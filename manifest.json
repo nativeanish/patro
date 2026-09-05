@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "yogeshojha.patro",
+  "id": "io.github.nativeanish.patro",
   "name": "Patro",
   "version": "0.1.0",
-  "author": "Yogesh Ojha",
+  "author": "Anish Gupta",
   "license": "MIT",
-  "description": "Nepali calendar for the Omarchy bar. Bikram Sambat date, month view, tithi, and a date converter.",
+  "description": "Nepali calendar for the Omarchy bar. Bikram Sambat date, month view, tithi, and year progress.",
   "kinds": [
     "bar-widget"
   ],
@@ -14,7 +14,7 @@
   },
   "barWidget": {
     "displayName": "Patro",
-    "description": "Today's Bikram Sambat date in the bar, with a Nepali month view, the tithi, and conversion both ways between BS and AD.",
+    "description": "Today's Bikram Sambat date in the bar, with a Nepali month view, the tithi, and dual BS/AD calendar view with year progress.",
     "category": "Time",
     "aliases": [
       "nepali",
@@ -29,7 +29,7 @@
     "defaults": {
       "language": "Nepali",
       "numerals": "Devanagari",
-      "format": "Full",
+      "format": "Time and Date",
       "showWeekday": true,
       "weekStart": "Sunday",
       "showGregorian": true,
@@ -64,12 +64,13 @@
         "type": "enum",
         "label": "Bar format",
         "options": [
+          "Time and Date",
           "Full",
           "Compact",
           "Numeric",
           "With Gregorian"
         ],
-        "defaultValue": "Full",
+        "defaultValue": "Time and Date",
         "description": "Right-clicking the bar label walks these in order."
       },
       {

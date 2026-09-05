@@ -104,7 +104,7 @@ function forMonth(grid, tithiFor) {
       var cell = grid[w][c]
       if (!cell) continue
       var tithi = tithiFor ? tithiFor(cell) : 0
-      var entries = forDate(cell, cell.gregorian, tithi)
+      var entries = forDate(cell.bikram || cell, cell.gregorian, tithi)
       if (entries.length > 0) marks[cell.day] = entries
     }
   }

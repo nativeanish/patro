@@ -11,13 +11,13 @@ import "Observances.js" as Observances
 // The bar label, and the host for the month view.
 BarWidget {
   id: root
-  moduleName: "yogeshojha.patro"
+  moduleName: "io.github.nativeanish.patro"
 
   property date displayDate: clock.date
 
   readonly property string language: Nepali.normalizeLanguage(setting("language", "Nepali"))
   readonly property string numerals: Nepali.normalizeNumerals(setting("numerals", "Devanagari"))
-  readonly property string barFormat: Nepali.normalizeFormat(setting("format", "Full"))
+  readonly property string barFormat: Nepali.normalizeFormat(setting("format", "Time and Date"))
   readonly property bool showWeekday: setting("showWeekday", true) === true
   readonly property bool showTithi: setting("showTithi", true) === true
   readonly property string configuredFont: String(setting("fontFamily", ""))
@@ -45,6 +45,7 @@ BarWidget {
         showWeekday: showWeekday,
         weekday: todayWeekday,
         gregorian: todayGregorian,
+        time: Qt.formatTime(displayDate, "HH:mm"),
         vertical: vertical
       })
     : "—"
@@ -128,12 +129,7 @@ BarWidget {
   SystemClock {
     id: clock
     precision: SystemClock.Minutes
-    onDateChanged: {
-      if (date.getFullYear() === root.displayDate.getFullYear()
-          && date.getMonth() === root.displayDate.getMonth()
-          && date.getDate() === root.displayDate.getDate()) return
-      root.displayDate = date
-    }
+    onDateChanged: root.displayDate = date
   }
 
   Loader {
@@ -148,7 +144,7 @@ BarWidget {
   }
 
   IpcHandler {
-    target: "yogeshojha.patro"
+    target: "io.github.nativeanish.patro"
 
     function refresh(): void { root.broadcast("refresh") }
     function open(): void { root.open() }

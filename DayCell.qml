@@ -7,6 +7,7 @@ import "Observances.js" as Observances
 Rectangle {
   id: root
 
+  property string mode: "BS"
   property var cell: null
   property var observances: []
   property bool selected: false
@@ -20,6 +21,7 @@ Rectangle {
   property color muted: Util.alpha(foreground, 0.60)
   property color holiday: Color.urgent
 
+  readonly property bool isBS: mode === "BS"
   readonly property bool filled: cell !== null && cell !== undefined
   readonly property bool weeklyHoliday: filled && Nepali.isWeeklyHoliday(cell.weekday)
   readonly property bool marked: observances.length > 0
@@ -55,7 +57,9 @@ Rectangle {
 
     Text {
       width: root.width
-      text: root.filled ? Nepali.numerals(root.cell.day, root.numerals) : ""
+      text: root.filled
+        ? (root.isBS ? Nepali.numerals(root.cell.day, root.numerals) : String(root.cell.day))
+        : ""
       color: root.restDay ? root.holiday : root.foreground
       font.family: root.fontFamily
       font.pixelSize: Style.font.title
@@ -66,10 +70,12 @@ Rectangle {
     Text {
       visible: root.showGregorian && root.filled
       width: root.width
-      text: root.filled ? String(root.cell.gregorian.day) : ""
+      text: !root.filled ? "" : (root.isBS
+        ? (root.cell.gregorian ? String(root.cell.gregorian.day) : "")
+        : (root.cell.bikram ? Nepali.numerals(root.cell.bikram.day, root.numerals) : ""))
       color: root.muted
       font.family: root.fontFamily
-      font.pixelSize: Style.font.bodySmall
+      font.pixelSize: Style.font.caption
       horizontalAlignment: Text.AlignHCenter
     }
   }

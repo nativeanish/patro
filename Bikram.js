@@ -192,6 +192,7 @@ function monthGrid(year, month, weekStart) {
       month: month,
       day: day,
       weekday: weekdayOf(year, month, day),
+      bikram: { year: year, month: month, day: day },
       gregorian: toGregorian(year, month, day)
     })
     if (week.length === DAYS_IN_WEEK) {
@@ -205,3 +206,118 @@ function monthGrid(year, month, weekStart) {
   }
   return weeks
 }
+
+function yearDays(year) {
+  if (!supportsYear(year)) return 365
+  var total = 0
+  for (var m = 1; m <= MONTHS_IN_YEAR; m++) total += monthLength(year, m)
+  return total
+}
+
+function dayOfYear(year, month, day) {
+  if (!isValid(year, month, day)) return 0
+  var count = 0
+  for (var m = 1; m < month; m++) count += monthLength(year, m)
+  return count + day
+}
+
+function yearProgress(year, month, day) {
+  var total = yearDays(year)
+  var passed = dayOfYear(year, month, day)
+  var remaining = Math.max(0, total - passed)
+  var fraction = total > 0 ? passed / total : 0
+  return {
+    total: total,
+    passed: passed,
+    remaining: remaining,
+    fraction: fraction,
+    percent: Math.round(fraction * 100)
+  }
+}
+
+function isGregorianLeapYear(year) {
+  return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
+}
+
+function gregorianMonthLength(year, month) {
+  if (month < 1 || month > 12) return 0
+  if (month === 2) return isGregorianLeapYear(year) ? 29 : 28
+  if (month === 4 || month === 6 || month === 9 || month === 11) return 30
+  return 31
+}
+
+function gregorianYearDays(year) {
+  return isGregorianLeapYear(year) ? 366 : 365
+}
+
+function gregorianDayOfYear(year, month, day) {
+  if (month < 1 || month > 12 || day < 1 || day > gregorianMonthLength(year, month)) return 0
+  var count = 0
+  for (var m = 1; m < month; m++) count += gregorianMonthLength(year, m)
+  return count + day
+}
+
+function gregorianYearProgress(year, month, day) {
+  var total = gregorianYearDays(year)
+  var passed = gregorianDayOfYear(year, month, day)
+  var remaining = Math.max(0, total - passed)
+  var fraction = total > 0 ? passed / total : 0
+  return {
+    total: total,
+    passed: passed,
+    remaining: remaining,
+    fraction: fraction,
+    percent: Math.round(fraction * 100)
+  }
+}
+
+function gregorianWeekdayOf(year, month, day) {
+  var days = daysFromCivil(year, month, day)
+  return (((days + 4) % DAYS_IN_WEEK) + DAYS_IN_WEEK) % DAYS_IN_WEEK
+}
+
+function addGregorianMonths(year, month, delta) {
+  var absolute = year * 12 + (month - 1) + delta
+  var targetYear = Math.floor(absolute / 12)
+  var targetMonth = absolute - targetYear * 12 + 1
+  return { year: targetYear, month: targetMonth }
+}
+
+function addGregorianDays(year, month, day, delta) {
+  var days = daysFromCivil(year, month, day)
+  return civilFromDays(days + delta)
+}
+
+function gregorianMonthGrid(year, month, weekStart) {
+  var length = gregorianMonthLength(year, month)
+  if (length === 0) return []
+
+  var start = weekStart || 0
+  var lead = (gregorianWeekdayOf(year, month, 1) - start + DAYS_IN_WEEK) % DAYS_IN_WEEK
+  var weeks = []
+  var week = []
+
+  for (var i = 0; i < lead; i++) week.push(null)
+  for (var day = 1; day <= length; day++) {
+    var greg = { year: year, month: month, day: day }
+    var bs = fromGregorian(year, month, day)
+    week.push({
+      year: year,
+      month: month,
+      day: day,
+      weekday: gregorianWeekdayOf(year, month, day),
+      bikram: bs,
+      gregorian: greg
+    })
+    if (week.length === DAYS_IN_WEEK) {
+      weeks.push(week)
+      week = []
+    }
+  }
+  if (week.length > 0) {
+    while (week.length < DAYS_IN_WEEK) week.push(null)
+    weeks.push(week)
+  }
+  return weeks
+}
+

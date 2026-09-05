@@ -40,10 +40,12 @@ var PAKSHA = {
 
 var GREGORIAN_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+var GREGORIAN_FULL = ["January", "February", "March", "April", "May", "June",
+                      "July", "August", "September", "October", "November", "December"]
 
 var LANGUAGES = ["Nepali", "English"]
 var NUMERALS = ["Devanagari", "Latin"]
-var FORMATS = ["Full", "Compact", "Numeric", "With Gregorian"]
+var FORMATS = ["Time and Date", "Full", "Compact", "Numeric", "With Gregorian"]
 var WEEK_STARTS = ["Sunday", "Monday"]
 
 function pick(value, allowed, fallback) {
@@ -114,7 +116,7 @@ function gregorianShort(parts, style) {
   return numerals(parts.day, style) + " " + GREGORIAN_SHORT[parts.month - 1]
 }
 
-// options: language, numerals, format, showWeekday, weekday, gregorian, vertical
+// options: language, numerals, format, showWeekday, weekday, gregorian, time, vertical
 function formatDate(parts, options) {
   if (!parts) return ""
   var settings = options || {}
@@ -123,6 +125,19 @@ function formatDate(parts, options) {
   var format = normalizeFormat(settings.format)
 
   if (settings.vertical === true) return verticalLines(parts, settings, style, language, format)
+
+  if (format === "Time and Date") {
+    var pieces = []
+    if (settings.time) pieces.push(settings.time)
+    if (settings.showWeekday !== false && settings.weekday !== undefined && settings.weekday >= 0) {
+      pieces.push(weekdayName(settings.weekday, language))
+    }
+    pieces.push(numerals(parts.day, style) + " " + monthName(parts.month, language))
+    if (settings.gregorian) {
+      pieces.push(settings.gregorian.day + " " + GREGORIAN_FULL[settings.gregorian.month - 1])
+    }
+    return pieces.join(" | ")
+  }
 
   if (format === "Numeric") {
     var numeric = numerals(parts.year, style) + "-" + padded(parts.month, style)
@@ -143,6 +158,28 @@ function formatDate(parts, options) {
 // A vertical bar is about one glyph wide, so month names go and digits stay.
 function verticalLines(parts, settings, style, language, format) {
   var lines = []
+  if (format === "Time and Date") {
+    if (settings.time) {
+      var timeParts = String(settings.time).split(":")
+      if (timeParts.length === 2) {
+        lines.push(timeParts[0])
+        lines.push(timeParts[1])
+      } else {
+        lines.push(String(settings.time).slice(0, 4))
+      }
+    }
+    if (settings.showWeekday === true && settings.weekday !== undefined && settings.weekday >= 0) {
+      lines.push(weekdayShort(settings.weekday, language))
+    }
+    lines.push(padded(parts.day, style))
+    lines.push(padded(parts.month, style))
+    if (settings.gregorian) {
+      lines.push(padded(settings.gregorian.day, "Latin"))
+      lines.push(GREGORIAN_SHORT[settings.gregorian.month - 1])
+    }
+    return lines.join("\n")
+  }
+
   if (settings.showWeekday === true && settings.weekday >= 0) {
     lines.push(weekdayShort(settings.weekday, language))
   }
@@ -224,3 +261,32 @@ function weekdayOrder(weekStart) {
 function isWeeklyHoliday(weekday) {
   return weekday === 6
 }
+
+// "September 2026"
+function gregorianMonthTitle(year, month, options) {
+  var mName = GREGORIAN_FULL[month - 1] || ""
+  return mName + " " + year
+}
+
+// "भदौ/असोज २०८३", the Bikram months a Gregorian month runs across.
+function bikramSpan(first, last, options) {
+  if (!first || !last) return ""
+  var settings = options || {}
+  var head = monthName(first.month, settings.language)
+  var tail = monthName(last.month, settings.language)
+  var months = head === tail ? head : head + "/" + tail
+  return first.year === last.year
+    ? months + " " + numerals(first.year, settings.numerals)
+    : months + " " + numerals(first.year, settings.numerals) + "/" + numerals(last.year, settings.numerals)
+}
+
+function daysRemainingLabel(remaining, percent, language, numeralsStyle) {
+  var isNep = normalizeLanguage(language) === "Nepali"
+  var remStr = numerals(remaining, numeralsStyle)
+  var pctStr = numerals(percent, numeralsStyle)
+  if (isNep) {
+    return remStr + " दिन बाँकी (" + pctStr + "%)"
+  }
+  return remStr + " days left (" + pctStr + "%)"
+}
+

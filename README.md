@@ -8,7 +8,7 @@ month view in Devanagari, tithi, holidays, and a BS ↔ AD converter.
 ## Install
 
 ```bash
-omarchy plugin add https://github.com/yogeshojha/patro.git --enable
+omarchy plugin add https://github.com/nativeanish/patro.git --enable
 ```
 
 Devanagari comes from `noto-fonts`, already installed by Omarchy.
@@ -16,7 +16,7 @@ Devanagari comes from `noto-fonts`, already installed by Omarchy.
 Optional keybind, in `~/.config/hypr/bindings.conf`:
 
 ```
-bindd = SUPER SHIFT, C, Patro, exec, omarchy-shell yogeshojha.patro toggle
+bindd = SUPER SHIFT, C, Patro, exec, omarchy-shell io.github.nativeanish.patro toggle
 ```
 
 ## Keys
@@ -28,17 +28,18 @@ bindd = SUPER SHIFT, C, Patro, exec, omarchy-shell yogeshojha.patro toggle
 | `[` `]` or `h` `l` | month |
 | `{` `}` or `k` `j` | year |
 | `t` | today |
-| `g` or `/` | converter |
+| `b` / `a` | switch BS / AD mode |
 | `Enter` | copy the selected date |
-| `Esc` | leave the converter, then close |
+| `Esc` | close |
 
 Bar: left click opens the month view, right click cycles the label format,
 middle click copies today's date.
 
-## Converter
+## Features
 
-`g`, then a date in either field. Accepts `2083-05-01`, `2083/5/1` and
-`२०८३-०५-०१`. Enter commits, Esc cancels.
+- **Titlebar time & date**: shows time, Nepali weekday, BS date, and Gregorian date (e.g. `15:02 | शनिबार | २० भदौ | 5 September`).
+- **BS / AD Switcher**: toggle between Bikram Sambat and Gregorian calendars with dual date display.
+- **Year Progress**: visual progress bar with remaining days in both BS and AD years.
 
 ## Settings
 
@@ -48,7 +49,7 @@ middle click copies today's date.
 |---|---|---|
 | Language | Nepali, English | Nepali |
 | Numerals | Devanagari, Latin | Devanagari |
-| Bar format | Full, Compact, Numeric, With Gregorian | Full |
+| Bar format | Time and Date, Full, Compact, Numeric, With Gregorian | Time and Date |
 | Show weekday | | on |
 | Week starts on | Sunday, Monday | Sunday |
 | Show Gregorian dates | | on |
@@ -96,7 +97,7 @@ omarchy plugin validate .
 `Bikram.js` calendar arithmetic, `Astro.js` sun and moon, `Nepali.js` names and
 formatting, `Observances.js` marked days, `CalendarData.js` the generated table.
 `BarWidget.qml` bar item, `Panel.qml` month view, `DayCell.qml` one day,
-`ConverterView.qml` the converter.
+`YearProgress.qml` year progress bar.
 
 `tests/harness.js` runs the QML JavaScript modules under node.
 
@@ -105,7 +106,7 @@ Run `omarchy-restart-shell` after editing; hot reload caches stale compiles.
 ## Remove
 
 ```bash
-omarchy plugin remove yogeshojha.patro
+omarchy plugin remove io.github.nativeanish.patro
 ```
 
 MIT

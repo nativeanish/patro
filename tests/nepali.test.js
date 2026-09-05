@@ -82,6 +82,15 @@ test("each bar format renders its own shape", () => {
   assert.equal(
     Nepali.formatDate(parts, { format: "With Gregorian", gregorian }),
     "१ भदौ २०८३ · 17 Aug");
+  assert.equal(
+    Nepali.formatDate({ year: 2083, month: 5, day: 20 }, {
+      format: "Time and Date",
+      showWeekday: true,
+      weekday: 6,
+      gregorian: { year: 2026, month: 9, day: 5 },
+      time: "15:02"
+    }),
+    "15:02 | शनिबार | २० भदौ | 5 September");
 });
 
 test("a vertical bar drops to short lines that fit its width", () => {
@@ -185,3 +194,18 @@ test("every message exists in both scripts with its placeholders intact", () => 
   assert.equal(Nepali.message("notADate", "English"), "That is not a date.");
   assert.equal(Nepali.message("nosuchthing", "Nepali"), "");
 });
+
+test("Gregorian month titles and Bikram spans format correctly", () => {
+  assert.equal(Nepali.gregorianMonthTitle(2026, 9, {}), "September 2026");
+
+  const first = { year: 2083, month: 5, day: 1 };
+  const last = { year: 2083, month: 6, day: 1 };
+  assert.equal(Nepali.bikramSpan(first, last, {}), "भदौ/असोज २०८३");
+  assert.equal(Nepali.bikramSpan(first, last, { language: "English", numerals: "Latin" }), "Bhadra/Ashwin 2083");
+});
+
+test("days remaining label formats correctly for both languages", () => {
+  assert.equal(Nepali.daysRemainingLabel(220, 40, "Nepali", "Devanagari"), "२२० दिन बाँकी (४०%)");
+  assert.equal(Nepali.daysRemainingLabel(220, 40, "English", "Latin"), "220 days left (40%)");
+});
+
